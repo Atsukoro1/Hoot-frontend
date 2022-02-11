@@ -1,4 +1,4 @@
 export interface ISnackbar {
-    opened: boolean
-    message: string
+  opened: boolean;
+  message: string;
 }
