@@ -10,6 +10,7 @@ import {
 import HootSkeleton from "../components/hootSkeleton";
 import Hoot from "../components/hoot";
 import SelectMenu from "../components/selectMenu";
+import Navbar from "../components/navbar";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
@@ -22,11 +23,13 @@ const AppPage = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
+  // Change the page and fetch the posts depending on it
   const handlePage = async (event: React.SyntheticEvent<unknown>, pageNumber: number): Promise<void> => {
     setPage(pageNumber);
     fetchPosts(pageNumber);
   };
 
+  // Fetch the posts from api based on the page
   const fetchPosts = async (toSetPage: number): Promise<void> => {
     const req: IHootResponse = await axiosInstance.get("/api/user/@me/feed?page=" + toSetPage);
     if (req.data?.success) {
@@ -35,11 +38,13 @@ const AppPage = () => {
     }
   };
 
+  // Fetch currently logged user from api
   const fetchUser = async (): Promise<void> => {
     const req: IUserResponse = await axiosInstance.get("/api/user/@me/");
     if (req.data?.success) setUser(req.data.data);
   };
 
+  // React, or remove reaction from posts
   const react = async (id: string): Promise<void> => {
     const method = hoots.find((el) => el._id === id.toString())?.hearts?.find((he) => he === user?._id.toString()) ? "DELETE" : "PUT";
     const req = await axiosInstance({
@@ -53,7 +58,7 @@ const AppPage = () => {
     const element : any = arrayCopy.find(specHoot => specHoot._id === id.toString());
     const elementIndex = arrayCopy.indexOf(element);
 
-    if(method == "PUT") {
+    if(method === "PUT") {
       element?.hearts?.push(user?._id || "");
     } else {
       const uIndex : number | any = element?.hearts?.indexOf(user?._id || "");
@@ -64,11 +69,14 @@ const AppPage = () => {
     setHoots(arrayCopy);
   };
 
+  // Bookmark post
   const bookmark = async (id: string): Promise<void> => {
     const req = await axiosInstance.post("/api/user/@me/bookmarks?id=" + id);
     console.log(req);
   };
 
+  // Runs on the page load
+  // Loads user data and user feed
   useEffect(() => {
     async function load() {
       await fetchUser();
@@ -80,6 +88,8 @@ const AppPage = () => {
 
   return (
     <div>
+      <Navbar/>
+      
       <div
         style={{
           width: "fit-content",
