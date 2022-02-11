@@ -1,5 +1,5 @@
 import { hootProps } from "../interfaces/hoot.interfaces";
-
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -9,6 +9,9 @@ import {
   Typography,
   Avatar,
   Badge,
+  Menu,
+  MenuItem,
+  Tooltip
 } from "@mui/material";
 import {
   Favorite as FavoriteIcon,
@@ -30,6 +33,9 @@ const Hoot = ({
   onBookMark,
   onReaction,
 }: hootProps) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
   return (
     <Card sx={{ width: 330, marginBottom: 2 }}>
       <CardHeader
@@ -39,7 +45,12 @@ const Hoot = ({
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
+          <IconButton
+            onClick={(event: React.SyntheticEvent<HTMLButtonElement>) => {
+              setAnchorEl(event.currentTarget);
+            }}
+            aria-label="settings"
+          >
             <MoreVertIcon />
           </IconButton>
         }
@@ -52,34 +63,57 @@ const Hoot = ({
         </Typography>
       </CardContent>
       <CardActions>
-        <IconButton
-          onClick={() => {
-            onReaction(_id);
-          }}
-          color="primary"
-          aria-label="Add this post to favorites"
-        >
-          {favorite ? (
-            <Badge badgeContent={hearts.length} max={999} color="primary">
-              <FavoriteIcon />
-            </Badge>
-          ) : (
-            <FavoriteBorderIcon />
-          )}
-        </IconButton>
-        <IconButton
-          onClick={() => {
-            onBookMark(_id);
-          }}
-          color="primary"
-          aria-label="Bookmark post"
-        >
-          {bookmarked ? <BookMarkAddIcon /> : <BookmarkAddOutlinedIcon />}
-        </IconButton>
-        <IconButton color="primary" aria-label="View this post">
-          <VisibilityIcon />
-        </IconButton>
+        <Tooltip title="Favorite">
+          <IconButton
+            onClick={() => {
+              onReaction(_id);
+            }}
+            color="primary"
+            aria-label="Add this post to favorites"
+          >
+            {favorite ? (
+              <Badge badgeContent={hearts.length} max={999} color="primary">
+                <FavoriteIcon />
+              </Badge>
+            ) : (
+              <FavoriteBorderIcon />
+            )}
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Bookmark">
+          <IconButton
+            onClick={() => {
+              onBookMark(_id);
+            }}
+            color="primary"
+            aria-label="Bookmark post"
+          >
+            {bookmarked ? <BookMarkAddIcon /> : <BookmarkAddOutlinedIcon />}
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="View">
+          <IconButton color="primary" aria-label="View this post">
+            <VisibilityIcon />
+          </IconButton>
+        </Tooltip>
       </CardActions>
+
+      <Menu
+        id="options-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={() => {
+          setAnchorEl(null);
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null);
+          }}
+        >
+          Report
+        </MenuItem>
+      </Menu>
     </Card>
   );
 };
