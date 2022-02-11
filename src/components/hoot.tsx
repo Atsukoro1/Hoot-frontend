@@ -63,11 +63,10 @@ const Hoot = ({
         </Typography>
       </CardContent>
       <CardActions>
+
         <Tooltip title="Favorite">
           <IconButton
-            onClick={() => {
-              onReaction(_id);
-            }}
+            onClick={() => { onReaction(_id); }}
             color="primary"
             aria-label="Add this post to favorites"
           >
@@ -80,37 +79,31 @@ const Hoot = ({
             )}
           </IconButton>
         </Tooltip>
+
         <Tooltip title="Bookmark">
           <IconButton
-            onClick={() => {
-              onBookMark(_id);
-            }}
+            onClick={() => { onBookMark(_id); }}
             color="primary"
-            aria-label="Bookmark post"
-          >
-            {bookmarked ? <BookMarkAddIcon /> : <BookmarkAddOutlinedIcon />}
+            aria-label="Bookmark post">
+              {bookmarked ? <BookMarkAddIcon /> : <BookmarkAddOutlinedIcon />}
           </IconButton>
         </Tooltip>
+
         <Tooltip title="View">
           <IconButton color="primary" aria-label="View this post">
             <VisibilityIcon />
           </IconButton>
         </Tooltip>
+
       </CardActions>
 
       <Menu
         id="options-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={() => {
-          setAnchorEl(null);
-        }}
+        onClose={() => { setAnchorEl(null); }}
       >
-        <MenuItem
-          onClick={() => {
-            setAnchorEl(null);
-          }}
-        >
+        <MenuItem onClick={() => { setAnchorEl(null); }}>
           Report
         </MenuItem>
       </Menu>

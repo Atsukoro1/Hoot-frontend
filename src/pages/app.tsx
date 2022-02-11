@@ -22,18 +22,13 @@ const AppPage = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
-  const handlePage = async (
-    event: React.SyntheticEvent<unknown>,
-    pageNumber: number
-  ): Promise<void> => {
+  const handlePage = async (event: React.SyntheticEvent<unknown>, pageNumber: number): Promise<void> => {
     setPage(pageNumber);
     fetchPosts(pageNumber);
   };
 
   const fetchPosts = async (toSetPage: number): Promise<void> => {
-    const req: IHootResponse = await axiosInstance.get(
-      "/api/user/@me/feed?page=" + toSetPage
-    );
+    const req: IHootResponse = await axiosInstance.get("/api/user/@me/feed?page=" + toSetPage);
     if (req.data?.success) {
       setHoots(req.data.data?.docs);
       setTotalPages(req.data.data.totalPages);
@@ -46,19 +41,27 @@ const AppPage = () => {
   };
 
   const react = async (id: string): Promise<void> => {
-    const method = hoots
-      .find((el) => el._id === id.toString())
-      ?.hearts?.find((he) => he === user?._id.toString())
-      ? "DELETE"
-      : "PUT";
+    const method = hoots.find((el) => el._id === id.toString())?.hearts?.find((he) => he === user?._id.toString()) ? "DELETE" : "PUT";
     const req = await axiosInstance({
-      method: method,
+      method: method, 
       url: "/api/hoots/reactions",
-      data: {
-        id,
-      },
+      data: { id } 
     });
     if (!req.data.success) return;
+
+    const arrayCopy = [...hoots];
+    const element : any = arrayCopy.find(specHoot => specHoot._id === id.toString());
+    const elementIndex = arrayCopy.indexOf(element);
+
+    if(method == "PUT") {
+      element?.hearts?.push(user?._id || "");
+    } else {
+      const uIndex : number | any = element?.hearts?.indexOf(user?._id || "");
+      if(uIndex !== -1) element?.hearts?.splice(uIndex, 1);
+    };
+
+    arrayCopy[elementIndex] = element;
+    setHoots(arrayCopy);
   };
 
   const bookmark = async (id: string): Promise<void> => {
@@ -85,6 +88,7 @@ const AppPage = () => {
         }}
       >
         {hoots.length === 0 && HootSkeleton}
+
         {hoots.length > 0 &&
           hoots.map((element, idx) => {
             return (
@@ -102,6 +106,7 @@ const AppPage = () => {
               />
             );
           })}
+
         {hoots.length > 0 && (
           <div style={{ width: "fit-content", margin: "auto" }}>
             <Pagination page={page} onChange={handlePage} count={totalPages} />
