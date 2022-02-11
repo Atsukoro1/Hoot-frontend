@@ -11,6 +11,7 @@ import HootSkeleton from "../components/hootSkeleton";
 import Hoot from "../components/hoot";
 import SelectMenu from "../components/selectMenu";
 import Navbar from "../components/navbar";
+import PostInput from "../components/postInput";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
@@ -89,14 +90,9 @@ const AppPage = () => {
   return (
     <div>
       <Navbar/>
+      <PostInput/>
       
-      <div
-        style={{
-          width: "fit-content",
-          marginLeft: "auto",
-          marginRight: "auto",
-        }}
-      >
+      <div style={{ width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
         {hoots.length === 0 && HootSkeleton}
 
         {hoots.length > 0 &&
