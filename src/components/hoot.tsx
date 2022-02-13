@@ -11,7 +11,8 @@ import {
   Badge,
   Menu,
   MenuItem,
-  Tooltip
+  Tooltip,
+  Chip
 } from "@mui/material";
 import {
   Favorite as FavoriteIcon,
@@ -26,6 +27,7 @@ const Hoot = ({
   _id,
   author,
   hearts,
+  hashtags,
   textContent,
   createdAt,
   favorite,
@@ -39,8 +41,9 @@ const Hoot = ({
   return (
     <Card sx={{ width: 330, marginBottom: 2 }}>
       <CardHeader
+        onClick={() => { window.location.href = "/profile/" + author._id }}
         avatar={
-          <Avatar sx={{ bgcolor: "lightpurple" }} aria-label="recipe">
+          <Avatar sx={{ bgcolor: "lightpurple", "&:hover": { "cursor": "pointer" } }} aria-label="recipe">
             {author?.username.slice(0, 1)}
           </Avatar>
         }
@@ -60,6 +63,10 @@ const Hoot = ({
       <CardContent>
         <Typography variant="body2" color="text.secondary">
           {textContent}
+          <br />
+          {hashtags.map((el : string) => {
+            return <Chip label={el} onClick={() => {}}></Chip>
+          })}
         </Typography>
       </CardContent>
       <CardActions>

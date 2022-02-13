@@ -38,7 +38,7 @@ const PostInput = ({ onPostCreate } : any) => {
 
     return (
         <form onSubmit={post} style={{ width: "fit-content", marginLeft: "auto", marginRight: "auto", marginBottom: 30 }}>
-            <Paper elevation={12} sx={{ width: 320, height: "fit-content", padding: 1 }}>
+            <Paper elevation={12} sx={{ width: 325, marginLeft: -1.5, height: "fit-content", padding: 1 }}>
                 <TextField 
                   rows={2} 
                   multiline

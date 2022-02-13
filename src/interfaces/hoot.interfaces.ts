@@ -6,7 +6,8 @@ export type hootProps = {
   };
   textContent: string | any;
   createdAt: number;
-  hearts: Array<string> | any;
+  hashtags: string[] | any;
+  hearts: string[] | any;
   favorite?: boolean;
   bookmarked?: boolean;
   onBookMark: (id: string) => void;

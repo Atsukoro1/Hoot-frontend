@@ -7,11 +7,9 @@ import {
   IHoot,
   IHootResponse,
 } from "../interfaces/app.interfaces";
-import HootSkeleton from "../components/hootSkeleton";
-import Hoot from "../components/hoot";
-import SelectMenu from "../components/selectMenu";
-import Navbar from "../components/navbar";
-import PostInput from "../components/postInput";
+import HootSkeleton from "../components/HootSkeleton";
+import Hoot from "../components/Hoot";
+import PostInput from "../components/PostInput";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
@@ -100,7 +98,6 @@ const AppPage = () => {
 
   return (
     <div>
-      <Navbar/>
       <PostInput onPostCreate={displayNewPost}/>
       
       <div style={{ width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
@@ -114,6 +111,7 @@ const AppPage = () => {
                 _id={element._id}
                 textContent={element.textContent}
                 author={element.author}
+                hashtags={element.hashtags}
                 createdAt={element.createdAt}
                 hearts={element.hearts}
                 favorite={element.hearts?.includes(user?._id ? user?._id : "")}
@@ -129,8 +127,6 @@ const AppPage = () => {
             <Pagination page={page} onChange={handlePage} count={totalPages} />
           </div>
         )}
-
-        <SelectMenu />
       </div>
     </div>
   );

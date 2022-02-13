@@ -16,7 +16,7 @@ const LogoutModal = ({ onClose } : any) => {
               </IconButton>
           </DialogTitle>    
           <DialogContent sx={{ float: "left" }}>
-              <Typography variant="body2">Your progress will be saved.</Typography>
+              <Typography variant="body2">You will be logged out.</Typography>
           </DialogContent>  
           <DialogActions sx={{ marginTop: -2, float: "left" }}>
               <Button onClick={logoutAction} variant="contained">

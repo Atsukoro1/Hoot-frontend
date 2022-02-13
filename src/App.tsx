@@ -6,6 +6,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Register from "./pages/register";
 import Login from "./pages/login";
 import AppPage from "./pages/app";
+import ProfilePage from "./pages/profile";
+import Navbar from "./components/Navbar";
+import SelectMenu from "./components/SelectMenu";
 
 // Theme for MUI
 const theme = createTheme({
@@ -42,11 +45,15 @@ function App() {
   return (
     <div>
       <ThemeProvider theme={theme}>
+      <Navbar/>
+      <SelectMenu/>
+
         <Router>
           <Routes>
             <Route path="auth/register" element={<Register />} />
             <Route path="auth/login" element={<Login />} />
             <Route path="/" element={<AppPage />} />
+            <Route path="/profile/:profileId" element={<ProfilePage/>}/>
           </Routes>
         </Router>
       </ThemeProvider>
