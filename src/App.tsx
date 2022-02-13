@@ -46,7 +46,7 @@ function App() {
           <Routes>
             <Route path="auth/register" element={<Register />} />
             <Route path="auth/login" element={<Login />} />
-            <Route path="app" element={<AppPage />} />
+            <Route path="/" element={<AppPage />} />
           </Routes>
         </Router>
       </ThemeProvider>

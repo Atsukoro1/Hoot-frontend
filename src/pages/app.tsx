@@ -76,6 +76,17 @@ const AppPage = () => {
     console.log(req);
   };
 
+  // Display new post to user when currently logged user posts something
+  const displayNewPost = (hootContent : IHoot) => {
+    const arrayCopy = [...hoots];
+
+    // Push the new hoot to array and remove the last to keep length of 10
+    arrayCopy.unshift(hootContent);
+    arrayCopy.pop();
+
+    setHoots(arrayCopy);
+  }
+
   // Runs on the page load
   // Loads user data and user feed
   useEffect(() => {
@@ -90,7 +101,7 @@ const AppPage = () => {
   return (
     <div>
       <Navbar/>
-      <PostInput/>
+      <PostInput onPostCreate={displayNewPost}/>
       
       <div style={{ width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
         {hoots.length === 0 && HootSkeleton}
