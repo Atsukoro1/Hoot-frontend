@@ -1,6 +1,12 @@
-const FollowingTab = () => {
+import Follower from "./Follower"
+
+const FollowingTab = ({ followers } : any) => {
   return (
-    <div>FollowingTab</div>
+    <div>
+      { followers && followers.map((el : any, idx : number) => {
+        return <Follower key={idx} _id={el._id} username={el.username}/>
+      }) }
+    </div>
   )
 }
 

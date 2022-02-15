@@ -64,8 +64,8 @@ const Hoot = ({
         <Typography variant="body2" color="text.secondary">
           {textContent}
           <br />
-          {hashtags.map((el : string) => {
-            return <Chip label={el} onClick={() => {}}></Chip>
+          {hashtags.map((el : string, idx : number) => {
+            return <Chip key={idx} label={el} onClick={() => {}}></Chip>
           })}
         </Typography>
       </CardContent>
