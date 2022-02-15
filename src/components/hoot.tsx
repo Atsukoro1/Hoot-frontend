@@ -41,7 +41,7 @@ const Hoot = ({
   return (
     <Card sx={{ width: 330, marginBottom: 2 }}>
       <CardHeader
-        onClick={() => { window.location.href = "/profile/" + author._id }}
+        onClick={() => { window.location.href = "/profile?id=" + author._id }}
         avatar={
           <Avatar sx={{ bgcolor: "lightpurple", "&:hover": { "cursor": "pointer" } }} aria-label="recipe">
             {author?.username.slice(0, 1)}

@@ -53,7 +53,7 @@ function App() {
             <Route path="auth/register" element={<Register />} />
             <Route path="auth/login" element={<Login />} />
             <Route path="/" element={<AppPage />} />
-            <Route path="/profile/:profileId" element={<ProfilePage/>}/>
+            <Route path="/profile" element={<ProfilePage/>}/>
           </Routes>
         </Router>
       </ThemeProvider>
