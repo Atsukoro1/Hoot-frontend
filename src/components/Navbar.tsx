@@ -1,4 +1,4 @@
-import { Box, AppBar, Toolbar, Typography } from "@mui/material"
+import { Box, AppBar, Toolbar } from "@mui/material"
 import { AutoStoriesTwoTone as Logo } from "@mui/icons-material"
 
 const Navbar = () => {

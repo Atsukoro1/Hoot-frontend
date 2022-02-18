@@ -4,7 +4,7 @@ import { IHoot } from "../interfaces/app.interfaces"
 const HootsTab = (hoots : IHoot[] | any) => {
   return (
     <div>
-        { hoots.hoots != [] && hoots.hoots.map((el : any, idx : any) => {
+        { hoots.hoots !== [] && hoots.hoots.map((el : any, idx : any) => {
             return <Hoot 
                 key={idx}
                 _id={el._id}

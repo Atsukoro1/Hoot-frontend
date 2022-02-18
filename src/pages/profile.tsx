@@ -21,14 +21,19 @@ const ProfilePage = () => {
     const [followers, setFollowers] = useState<object>([]);
     const [following, setFollowing] = useState<object>([]);
     const [id, setId] = useState<string | null>(null);
+    const [followed, setFollowed] = useState<boolean>(false);
+    const [blocked, setBlocked] = useState<boolean>(false);
+
+    // Status of anchored element - relates to menu opening
     const [menuAnchorElement, setMenuAnchorElement] = useState<HTMLElement | null>(null);
     const menuOpened = Boolean(menuAnchorElement);
 
-
+    // Opens the menu - runs when user clicks on three dots
     const menuHandleOpen = (event: React.MouseEvent<HTMLButtonElement>) : void => {
         setMenuAnchorElement(event.currentTarget);
     }
 
+    // Closes the menu - runs when user clicks away from menu
     const menuHandleClose = () => {
         setMenuAnchorElement(null);
     }
@@ -38,11 +43,13 @@ const ProfilePage = () => {
         async function load() {
             const id = new URLSearchParams(window.location.search).get("id");
             setId(id);
-            const response = await axiosInstance.get("/api/user/profile?id=" + id);
+            const response = await axiosInstance.get("/api/users/profile?id=" + id);
             
             if(response.data.success) {
                 setHoots(response.data.data.hoots);
                 setUser(response.data.data.user);
+                setFollowed(response.data.data.followed);
+                setBlocked(response.data.data.blocked);
             }
         }
 
@@ -59,7 +66,7 @@ const ProfilePage = () => {
     const fetchFollowing = async () => {
         if(following == null) return;
 
-        const response = await axiosInstance.get("/api/user/following?id=" + id);
+        const response = await axiosInstance.get("/api/users/following?id=" + id);
         setFollowing(response.data.docs);
     };
 
@@ -68,8 +75,32 @@ const ProfilePage = () => {
     const fetchFollowers = async () => {
         if(followers == null) return;
 
-        const response = await axiosInstance.get("/api/user/followers?id=" + id);
+        const response = await axiosInstance.get("/api/users/followers?id=" + id);
+
         setFollowers(response.data.docs);
+    };
+
+    // Runs when user clicks follow or unfollow button
+    const handleFollow = async () => {
+        const request = await axiosInstance({
+            method: followed ? "DELETE" : "POST",
+            url: "/api/user/relationships/followers?id=" + user?._id
+        });
+
+        if(!request.data.success) return;
+
+        setFollowed(followed ? false : true);
+    };
+
+    const handleBlock = async () => {
+        const request = await axiosInstance({
+            method: blocked ? "DELETE" : "POST",
+            url: "/api/user/relationships/block?id=" + user?._id
+        });
+
+        if(!request.data.success) return;
+
+        setBlocked(blocked ? false : true);
     };
 
     return (
@@ -86,8 +117,11 @@ const ProfilePage = () => {
             <Typography sx={{ width: "200px", marginLeft: "auto", marginRight: "auto", marginBottom: 1.5, color: "white", textAlign: "center" }} variant="body2">{ user && user.bio }</Typography>
 
             <div style={{ marginBottom: 20, width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
-                <Button variant="contained">
-                    Follow
+                <Button 
+                onClick={handleFollow}
+                variant={ followed === true ? "outlined" : "contained" } 
+                disabled={followed === null ? true : false}>
+                    { followed === true ? "Unfollow" : "Follow" }
                 </Button>
             </div>
 
@@ -108,7 +142,7 @@ const ProfilePage = () => {
             </Box>
 
             <Menu anchorEl={menuAnchorElement} onClose={menuHandleClose} open={menuOpened} MenuListProps={{ 'aria-labelledby': 'menu-expand-button' }} id="more-menu">
-                <MenuItem>Block</MenuItem>
+                <MenuItem onClick={handleBlock}>{ blocked === true ? "Unblock" : "Block" }</MenuItem>
             </Menu>
         </Paper>
     )

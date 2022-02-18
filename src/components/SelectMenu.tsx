@@ -6,7 +6,6 @@ import {
 } from "@mui/icons-material";
 
 import LogoutModal from "./LogoutModal";
-import ProfileModal from "./ProfileModal";
 
 import { useState } from "react";
 
@@ -39,10 +38,6 @@ const SelectMenu = () => {
 
       <Dialog onClose={() => setLogoutModalState(false)} open={logoutModalState}>
         <LogoutModal onClose={() => setLogoutModalState(false)}/>
-      </Dialog>
-
-      <Dialog onClose={() => setProfileModalState(false)} open={profileModalState}>
-        <ProfileModal/>
       </Dialog>
     </div>
   );
