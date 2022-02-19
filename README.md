@@ -1,4 +1,4 @@
-# Foobar
+# Hoot-frontend
 
 Hoot-frontend is frontend for my Twitter-like web application.
 
