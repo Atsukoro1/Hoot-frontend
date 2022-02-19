@@ -1,16 +1,19 @@
+// MUI library components
+import Pagination from "@mui/material/Pagination";
+
+// Other libraries
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Pagination } from "@mui/material";
-import {
-  IUser,
-  IUserResponse,
-  IHoot,
-  IHootResponse,
-} from "../interfaces/app.interfaces";
+
+// Interfaces
+import { IUser, IUserResponse, IHoot, IHootResponse } from "../interfaces/app.interfaces";
+
+// Self-made components
 import HootSkeleton from "../components/HootSkeleton";
 import Hoot from "../components/Hoot";
 import PostInput from "../components/PostInput";
 
+// Create a new axios instance
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
   withCredentials: true,

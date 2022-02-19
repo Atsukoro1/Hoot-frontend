@@ -1,13 +1,31 @@
-import { Tabs, Tab, Box, Avatar, Typography, Paper, Button, IconButton, Menu, MenuItem } from "@mui/material"
-import React, { useEffect, useState } from "react"
-import axios from "axios";
+// MUI library components and icons
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Pagination from "@mui/material/Pagination";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-import { MoreVert as MoreVertIcon } from "@mui/icons-material";
-import { IHoot, IUser } from "../interfaces/app.interfaces";
-
+// Self-made components
 import HootsTab from "../components/HootsTab";
 import FollowingTab from "../components/FollowingTab";
 import FollowersTab from "../components/FollowersTab";
+
+// Other libraries components
+import React, { useEffect, useState, useContext } from "react"
+import axios from "axios";
+
+// Interfaces
+import { IHoot, IUser } from "../interfaces/app.interfaces";
+
+// Currently logged in user's id
+import { AuthorIdContext } from "../App";
 
 // Create new instance of axios client
 const axiosInstance = axios.create({
@@ -24,10 +42,12 @@ const ProfilePage = () => {
     const [id, setId] = useState<string | null>(null);
     const [followed, setFollowed] = useState<boolean>(false);
     const [blocked, setBlocked] = useState<boolean>(false);
-    const [loggedUserId, setLoggedUserId] = useState<string | null>(null);
-
-    // Status of anchored element - relates to menu opening
+    const [page, setPage] = useState<number>(1);
+    const [pageCount, setPageCount] = useState<number>(1);
+    const loggedUserId = useContext(AuthorIdContext);
     const [menuAnchorElement, setMenuAnchorElement] = useState<HTMLElement | null>(null);
+
+    // Status of the anchored menu
     const menuOpened = Boolean(menuAnchorElement);
 
     // Opens the menu - runs when user clicks on three dots
@@ -35,16 +55,15 @@ const ProfilePage = () => {
         setMenuAnchorElement(event.currentTarget);
     }
 
+    // Runs when user clicks on pagination
+    // Will change page and useEffect hook will then change content depending on the selected page
+    const handlePageChange = (event : React.SyntheticEvent<unknown>, value : number) => {
+        setPage(value);
+    };
+
     // Closes the menu - runs when user clicks away from menu
     const menuHandleClose = () => {
         setMenuAnchorElement(null);
-    }
-
-    // Get specific cookie by name because document.cookie returns string
-    function getCookie(name : string) {
-        const value = `; ${document.cookie}`;
-        const parts : any = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
     }
 
     // Runs on page component load
@@ -59,14 +78,29 @@ const ProfilePage = () => {
                 setUser(response.data.data.user);
                 setFollowed(response.data.data.followed);
                 setBlocked(response.data.data.blocked);
-
-                // Set id of the currently logged user
-                setLoggedUserId(getCookie("id"));
+                setPageCount(response.data.data.hoots.totalPages);
             }
         }
 
         load();
     }, []);
+
+    // Runs when page changes and fetches a new page
+    useEffect(() => {
+        switch (tabValue) {
+            case 0:
+                
+                break;
+
+            case 1:
+                fetchFollowers();
+                break;
+
+            case 2:
+                fetchFollowing();
+                break;
+        }
+    }, [page]);
 
     // Runs when user clicks on tab
     const changeTab = (event : React.SyntheticEvent<unknown>, value : number) => {
@@ -78,7 +112,9 @@ const ProfilePage = () => {
     const fetchFollowing = async () => {
         if(following == null) return;
 
-        const response = await axiosInstance.get("/api/users/following?id=" + id);
+        const response = await axiosInstance.get("/api/users/following?id=" + id + "&page=" + page);
+
+        setPageCount(response.data.totalPages);
         setFollowing(response.data.docs);
     };
 
@@ -87,8 +123,9 @@ const ProfilePage = () => {
     const fetchFollowers = async () => {
         if(followers == null) return;
 
-        const response = await axiosInstance.get("/api/users/followers?id=" + id);
+        const response = await axiosInstance.get("/api/users/followers?id=" + id + "&page=" + page);
 
+        setPageCount(response.data.totalPages);
         setFollowers(response.data.docs);
     };
 
@@ -104,6 +141,7 @@ const ProfilePage = () => {
         setFollowed(followed ? false : true);
     };
 
+    // Runs when user clicks the block button
     const handleBlock = async () => {
         const request = await axiosInstance({
             method: blocked ? "DELETE" : "POST",
@@ -116,7 +154,7 @@ const ProfilePage = () => {
     };
 
     return (
-        <Paper variant="elevation" elevation={10} sx={{ width: 400, marginLeft: "auto", marginRight: "auto", padding: 3, backgroundColor: "#273345" }}>
+        <Paper variant="elevation" elevation={10} sx={{ width: 420, marginLeft: "auto", marginRight: "auto", padding: 3, backgroundColor: "#273345" }}>
             <IconButton onClick={menuHandleOpen} id="menu-expand-button" color="secondary" sx={{ float: "right", clear: "both" }}>
                 <MoreVertIcon/>
             </IconButton>
@@ -146,10 +184,12 @@ const ProfilePage = () => {
                     <Tab onClick={fetchFollowing} disableRipple disableFocusRipple label="Following"/>
                 </Tabs>
 
-                <div style={{ marginTop: 25 }}>
+                <div style={{ marginTop: 25, width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
                     { tabValue === 0 && <HootsTab hoots={hoots}/> }
                     { tabValue === 1 && <FollowersTab followers={followers}/> }
                     { tabValue === 2 && <FollowingTab followers={following}/> }
+
+                    <Pagination page={page} onChange={handlePageChange} count={pageCount}/>
                 </div>
 
 

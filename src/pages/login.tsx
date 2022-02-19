@@ -1,21 +1,23 @@
+// MUI library components
+import Button from "@mui/material/Button";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import CardActions from "@mui/material/CardActions";
+import Card from "@mui/material/Card";
+import Divider from "@mui/material/Divider";
+import Link from "@mui/material/Link";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import Lock from "@mui/icons-material/Lock";
+import Refresh from "@mui/icons-material/Refresh";
+
+// Interfaces
+import { ISnackbar } from "../interfaces/login.interfaces";
+
+// Other libraries
 import React, { useState } from "react";
 import axios from "axios";
-
-import {
-  Button,
-  CardContent,
-  Typography,
-  TextField,
-  CardActions,
-  Card,
-  Divider,
-  Link,
-  Snackbar,
-  Alert,
-} from "@mui/material";
-import { Lock, Refresh } from "@mui/icons-material";
-
-import { ISnackbar } from "../interfaces/login.interfaces";
 
 const LoginPage = () => {
   const [buttonLoadingState, setButtonLoadingState] = useState<Boolean>(false);
