@@ -9,6 +9,7 @@ import HootsTab from "../components/HootsTab";
 import FollowingTab from "../components/FollowingTab";
 import FollowersTab from "../components/FollowersTab";
 
+// Create new instance of axios client
 const axiosInstance = axios.create({
     baseURL: process.env.REACT_APP_BASE_URL,
     withCredentials: true,
@@ -54,7 +55,7 @@ const ProfilePage = () => {
             const response = await axiosInstance.get("/api/users/profile?id=" + id);
             
             if(response.data.success) {
-                setHoots(response.data.data.hoots);
+                setHoots(response.data.data.hoots.docs);
                 setUser(response.data.data.user);
                 setFollowed(response.data.data.followed);
                 setBlocked(response.data.data.blocked);
@@ -128,12 +129,14 @@ const ProfilePage = () => {
             <Typography sx={{ width: "200px", marginLeft: "auto", marginRight: "auto", marginBottom: 1.5, color: "white", textAlign: "center" }} variant="body2">{ user && user.bio }</Typography>
 
             <div style={{ marginBottom: 20, width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
-                <Button 
-                onClick={handleFollow}
-                variant={ followed === true ? "outlined" : "contained" } 
-                disabled={followed === null ? true : false}>
-                    { followed === true ? "Unfollow" : "Follow" }
-                </Button>
+                { loggedUserId !== user?._id &&
+                    <Button 
+                        onClick={handleFollow}
+                        variant={ followed === true ? "outlined" : "contained" } 
+                        disabled={followed === null ? true : false}>
+                            { followed === true ? "Unfollow" : "Follow" }
+                    </Button>
+                }
             </div>
 
             <Box sx={{ marginBottom: 2, width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
@@ -153,7 +156,16 @@ const ProfilePage = () => {
             </Box>
 
             <Menu anchorEl={menuAnchorElement} onClose={menuHandleClose} open={menuOpened} MenuListProps={{ 'aria-labelledby': 'menu-expand-button' }} id="more-menu">
-                <MenuItem onClick={handleBlock}>{ blocked === true ? "Unblock" : "Block" }</MenuItem>
+                { loggedUserId !== user?._id && 
+                    <MenuItem 
+                        onClick={handleBlock}>
+                            { blocked === true ? "Unblock" : "Block" }
+                    </MenuItem>
+                }
+
+                { loggedUserId === user?._id && 
+                    <MenuItem>Settings</MenuItem>
+                }
             </Menu>
         </Paper>
     )

@@ -1,4 +1,5 @@
 import { SpeedDial, SpeedDialAction, Dialog } from "@mui/material";
+import { AuthorIdContext } from "../App";
 import {
   MoreHoriz as MoreHorizIcon,
   Person as PersonIcon,
@@ -7,10 +8,16 @@ import {
 
 import LogoutModal from "./LogoutModal";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 const SelectMenu = () => {
   const [logoutModalState, setLogoutModalState] = useState<boolean>(false);
+  const currentlyLoggedUserId = useContext(AuthorIdContext);
+
+  // Redirect currently logged user to their profile
+  const redirectToMyProfile = () => {
+    window.location.href = "/profile?id=" + currentlyLoggedUserId;
+  };
 
   return (
     <div>
@@ -28,7 +35,7 @@ const SelectMenu = () => {
         />
 
         <SpeedDialAction
-          onClick={() => {}}
+          onClick={redirectToMyProfile}
           key={"myprofile"}
           icon={<PersonIcon />}
           tooltipTitle={"My profile"}

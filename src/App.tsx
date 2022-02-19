@@ -1,6 +1,7 @@
 // External libraries
 import { ThemeProvider, createTheme } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect, useContext, useState } from "react";
 
 // Pages
 import Register from "./pages/register";
@@ -41,22 +42,38 @@ const theme = createTheme({
   },
 });
 
+// Get specific cookie by name because document.cookie returns string
+function getCookie(name : string) {
+  const value = `; ${document.cookie}`;
+  const parts : any = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+export const AuthorIdContext = React.createContext(null);
+
 function App() {
+  const [currentlyLoggedUserId, setCurrentlyLoggedUserId] = useState(null);
+
+  useEffect(() => {
+    setCurrentlyLoggedUserId(getCookie("id"));
+  }, []);
+
   return (
     <div>
-      <ThemeProvider theme={theme}>
-      <Navbar/>
-      <SelectMenu/>
-
-        <Router>
-          <Routes>
-            <Route path="auth/register" element={<Register />} />
-            <Route path="auth/login" element={<Login />} />
-            <Route path="/" element={<AppPage />} />
-            <Route path="/profile" element={<ProfilePage/>}/>
-          </Routes>
-        </Router>
-      </ThemeProvider>
+      <AuthorIdContext.Provider value={currentlyLoggedUserId}>
+        <ThemeProvider theme={theme}>
+          <Navbar/>
+          <SelectMenu/>
+          <Router>
+              <Routes>
+                <Route path="auth/register" element={<Register />} />
+                <Route path="auth/login" element={<Login />} />
+                <Route path="/" element={<AppPage />} />
+              <Route path="/profile" element={<ProfilePage/>}/>
+            </Routes>
+          </Router>
+        </ThemeProvider>
+      </AuthorIdContext.Provider>
     </div>
   );
 }

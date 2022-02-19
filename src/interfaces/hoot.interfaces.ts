@@ -12,4 +12,6 @@ export type hootProps = {
   bookmarked?: boolean;
   onBookMark: (id: string) => void;
   onReaction: (id: string) => void;
+  onDelete: (id: string) => void;
+  onEdit: (id: string, textContent: string) => void;
 };

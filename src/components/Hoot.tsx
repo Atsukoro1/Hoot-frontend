@@ -1,5 +1,8 @@
 import { hootProps } from "../interfaces/hoot.interfaces";
-import React, { useState } from "react";
+import EditPostModal from "./EditPostModal";
+import axios from "axios";
+import { AuthorIdContext } from "../App";
+import React, { useState, useContext } from "react";
 import {
   Card,
   CardHeader,
@@ -12,7 +15,8 @@ import {
   Menu,
   MenuItem,
   Tooltip,
-  Chip
+  Chip,
+  Dialog
 } from "@mui/material";
 import {
   Favorite as FavoriteIcon,
@@ -22,6 +26,12 @@ import {
   BookmarkAddOutlined as BookmarkAddOutlinedIcon,
   FavoriteBorder as FavoriteBorderIcon,
 } from "@mui/icons-material";
+
+// Create a new Axios instance
+const axiosInstance = axios.create({
+  baseURL: process.env.REACT_APP_BASE_URL,
+  withCredentials: true,
+});
 
 const Hoot = ({
   _id,
@@ -33,17 +43,62 @@ const Hoot = ({
   favorite,
   bookmarked,
   onBookMark,
-  onReaction,
+  onReaction, 
+  onDelete,
+  onEdit
 }: hootProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [editModalOpened, setEditModalOpened] = useState<boolean>(false);
+  const currentlyLoggedUserId = useContext(AuthorIdContext);
   const open = Boolean(anchorEl);
 
+  // When user clicks on hoot's author avatar or name, 
+  // he will be redirected to the author's profile
+  const redirectToProfile = () => {
+    window.location.href = "/profile?id=" + author._id
+  };
+
+  // Delete a post when user clicks the "Delete" item in post menu
+  const deletePost = async() => {
+    const request = await axiosInstance.delete("/api/hoots?id=" + _id);
+    setAnchorEl(null);
+
+    if(!request.data.success) return;
+
+    onDelete(_id);
+  }
+
+  // Edit the post when user clicks the edit button in edit modal
+  const editPost = async(content:string) => {
+    const request = await axiosInstance.patch("/api/hoots", {
+      textContent: content,
+      id: _id
+    });
+
+    if(!request.data.success) return;
+
+    onEdit(_id, content);
+    setEditModalOpened(false);
+  };
+
+  // Open edit modal when user clicks the edit button
+  const openEditModal = () => {
+    setEditModalOpened(true);
+    setAnchorEl(null);
+  }
+
+  // Close edit modal when user clicks the close button on edit modal
+  const closeEditModal = () => {
+    setEditModalOpened(false);
+  }
+
   return (
-    <Card sx={{ width: 330, marginBottom: 2 }}>
+    <div>
+      <Card sx={{ width: 330, marginBottom: 2 }}>
       <CardHeader
-        onClick={() => { window.location.href = "/profile?id=" + author._id }}
+
         avatar={
-          <Avatar sx={{ bgcolor: "lightpurple", "&:hover": { "cursor": "pointer" } }} aria-label="recipe">
+          <Avatar onClick={redirectToProfile} sx={{ bgcolor: "lightpurple", "&:hover": { "cursor": "pointer" } }} aria-label="recipe">
             {author?.username.slice(0, 1)}
           </Avatar>
         }
@@ -57,12 +112,16 @@ const Hoot = ({
             <MoreVertIcon />
           </IconButton>
         }
-        title={author?.username.toString()}
+        title={
+          <label onClick={redirectToProfile}>
+            { author?.username.toString() }
+          </label>
+        }
         subheader={new Date(createdAt).toLocaleString("en-US")}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          {textContent}
+          { textContent }
           <br />
           {hashtags.map((el : string, idx : number) => {
             return <Chip key={idx} label={el} onClick={() => {}}></Chip>
@@ -92,7 +151,7 @@ const Hoot = ({
             onClick={() => { onBookMark(_id); }}
             color="primary"
             aria-label="Bookmark post">
-              {bookmarked ? <BookMarkAddIcon /> : <BookmarkAddOutlinedIcon />}
+              { bookmarked ? <BookMarkAddIcon /> : <BookmarkAddOutlinedIcon /> }
           </IconButton>
         </Tooltip>
 
@@ -110,11 +169,30 @@ const Hoot = ({
         open={open}
         onClose={() => { setAnchorEl(null); }}
       >
-        <MenuItem onClick={() => { setAnchorEl(null); }}>
-          Report
-        </MenuItem>
+        { currentlyLoggedUserId !== author._id &&
+          <MenuItem onClick={() => { setAnchorEl(null); }}>
+            Report
+          </MenuItem>
+        }
+
+        { currentlyLoggedUserId === author._id &&
+          <MenuItem onClick={openEditModal}>
+            Edit
+          </MenuItem>
+        }
+
+        { currentlyLoggedUserId === author._id &&
+          <MenuItem onClick={deletePost}>
+            Delete
+          </MenuItem>
+        }
       </Menu>
     </Card>
+
+    <Dialog onClose={closeEditModal} open={editModalOpened}>
+      <EditPostModal onEdit={(content:string) => editPost(content)} onClose={closeEditModal}></EditPostModal>
+    </Dialog>
+    </div>
   );
 };
 

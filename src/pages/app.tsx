@@ -69,6 +69,25 @@ const AppPage = () => {
     setHoots(arrayCopy);
   };
 
+  // Remove post
+  const remove = async (id: string): Promise<void> => {
+    const arrayCopy = [...hoots];
+    const removePost : any = arrayCopy.find(el => el._id === id);
+    const index = arrayCopy.indexOf(removePost);
+    arrayCopy.splice(index, 1);
+    setHoots(arrayCopy);
+  };
+
+  // Edit post content
+  const edit = async (id: string, content: string): Promise<void> => {
+    const arrayCopy = [...hoots];
+    let postToEdit : any = arrayCopy.find(el => el._id === id);
+    const postIndex : any = arrayCopy.indexOf(postToEdit);
+    postToEdit.textContent = content;
+    arrayCopy[postIndex] = postToEdit;
+    setHoots(arrayCopy);
+  }
+
   // Bookmark post
   const bookmark = async (id: string): Promise<void> => {
     const req = await axiosInstance.post("/api/user/@me/bookmarks?id=" + id);
@@ -119,6 +138,8 @@ const AppPage = () => {
                 bookmarked={false}
                 onReaction={react}
                 onBookMark={bookmark}
+                onDelete={remove}
+                onEdit={edit}
               />
             );
           })}
