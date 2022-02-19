@@ -41,6 +41,7 @@ const AppPage = () => {
   const fetchUser = async (): Promise<void> => {
     const req: IUserResponse = await axiosInstance.get("/api/user/@me/");
     if (req.data?.success) setUser(req.data.data);
+    document.cookie = "id=" + req.data?.data?._id;
   };
 
   // React, or remove reaction from posts

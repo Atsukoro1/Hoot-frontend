@@ -23,6 +23,7 @@ const ProfilePage = () => {
     const [id, setId] = useState<string | null>(null);
     const [followed, setFollowed] = useState<boolean>(false);
     const [blocked, setBlocked] = useState<boolean>(false);
+    const [loggedUserId, setLoggedUserId] = useState<string | null>(null);
 
     // Status of anchored element - relates to menu opening
     const [menuAnchorElement, setMenuAnchorElement] = useState<HTMLElement | null>(null);
@@ -38,6 +39,13 @@ const ProfilePage = () => {
         setMenuAnchorElement(null);
     }
 
+    // Get specific cookie by name because document.cookie returns string
+    function getCookie(name : string) {
+        const value = `; ${document.cookie}`;
+        const parts : any = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
     // Runs on page component load
     useEffect(() => {
         async function load() {
@@ -50,6 +58,9 @@ const ProfilePage = () => {
                 setUser(response.data.data.user);
                 setFollowed(response.data.data.followed);
                 setBlocked(response.data.data.blocked);
+
+                // Set id of the currently logged user
+                setLoggedUserId(getCookie("id"));
             }
         }
 

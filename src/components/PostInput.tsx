@@ -1,4 +1,4 @@
-import { Paper, TextField, Button } from "@mui/material"
+import { Paper, TextField, Button, Backdrop, CircularProgress } from "@mui/material"
 
 import axios from "axios";
 import React, { useState } from "react"
@@ -10,13 +10,13 @@ const axiosInstance = axios.create({
 });
 
 const PostInput = ({ onPostCreate } : any) => {
-    const [buttonLoadingState, setButtonLoadingState] = useState<boolean>(false);
+    const [loadingState, setLoadingState] = useState<boolean>(false);
 
     // Handle when user posts a new Hoot
     const post = async (e: React.SyntheticEvent) : Promise<void> => {
         e.preventDefault();
 
-        setButtonLoadingState(true);
+        setLoadingState(true);
 
         const target = e.target as typeof e.target & {
             textContent: { value: string };
@@ -32,7 +32,7 @@ const PostInput = ({ onPostCreate } : any) => {
 
         if(!res.data.success) return;
         
-        setButtonLoadingState(false);
+        setLoadingState(false);
         onPostCreate(res.data.data);
     }
 
@@ -50,9 +50,13 @@ const PostInput = ({ onPostCreate } : any) => {
                   variant="outlined"
                 />
 
-                { !buttonLoadingState && <Button type="submit" sx={{ width: "100%", marginTop: 1 }} variant="contained">Hoot it!</Button>}
-                { buttonLoadingState && <Button sx={{ width: "100%", marginTop: 1 }} disabled variant="contained">Hooting...</Button>}
+                { !loadingState && <Button type="submit" sx={{ width: "100%", marginTop: 1 }} variant="contained">Hoot it!</Button>}
+                { loadingState && <Button sx={{ width: "100%", marginTop: 1 }} disabled variant="contained">Hooting...</Button>}
             </Paper>
+
+            <Backdrop sx={{ zIndex: 2 }} open={loadingState}>
+                <CircularProgress/>
+            </Backdrop>
         </form>
     )
 }

@@ -11,7 +11,6 @@ import { useState } from "react";
 
 const SelectMenu = () => {
   const [logoutModalState, setLogoutModalState] = useState<boolean>(false);
-  const [profileModalState, setProfileModalState] = useState<boolean>(false);
 
   return (
     <div>
@@ -29,7 +28,7 @@ const SelectMenu = () => {
         />
 
         <SpeedDialAction
-          onClick={() => setProfileModalState(true)}
+          onClick={() => {}}
           key={"myprofile"}
           icon={<PersonIcon />}
           tooltipTitle={"My profile"}
