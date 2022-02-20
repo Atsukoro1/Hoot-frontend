@@ -1,14 +1,20 @@
-import { SpeedDial, SpeedDialAction, Dialog } from "@mui/material";
-import { AuthorIdContext } from "../App";
-import {
-  MoreHoriz as MoreHorizIcon,
-  Person as PersonIcon,
-  Logout as LogoutIcon
-} from "@mui/icons-material";
+// MUI library components
+import SpeedDial from "@mui/material/SpeedDial";
+import SpeedDialAction from "@mui/material/SpeedDialAction";
+import Dialog from "@mui/material/Dialog";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import PersonIcon from "@mui/icons-material/Person";
+import LogoutIcon from "@mui/icons-material/Logout";
 
+// Context
+import { AuthorIdContext } from "App";
+
+// Self-made components
 import LogoutModal from "./LogoutModal";
 
+// Other libraries
 import { useState, useContext } from "react";
+
 
 const SelectMenu = () => {
   const [logoutModalState, setLogoutModalState] = useState<boolean>(false);

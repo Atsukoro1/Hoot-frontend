@@ -1,31 +1,36 @@
+// Import MUI library components and icons
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import IconButton from "@mui/material/IconButton";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Badge from "@mui/material/Badge";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Tooltip from "@mui/material/Tooltip";
+import Chip from "@mui/material/Chip";
+import Dialog from "@mui/material/Dialog";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+
+// Import interfaces
 import { hootProps } from "../interfaces/hoot.interfaces";
+
+// Import self-made components
 import EditPostModal from "./EditPostModal";
-import axios from "axios";
+
+// Import content
 import { AuthorIdContext } from "../App";
+
+// Import from other libraries
 import React, { useState, useContext } from "react";
-import {
-  Card,
-  CardHeader,
-  IconButton,
-  CardContent,
-  CardActions,
-  Typography,
-  Avatar,
-  Badge,
-  Menu,
-  MenuItem,
-  Tooltip,
-  Chip,
-  Dialog
-} from "@mui/material";
-import {
-  Favorite as FavoriteIcon,
-  Visibility as VisibilityIcon,
-  MoreVert as MoreVertIcon,
-  BookmarkAdd as BookMarkAddIcon,
-  BookmarkAddOutlined as BookmarkAddOutlinedIcon,
-  FavoriteBorder as FavoriteBorderIcon,
-} from "@mui/icons-material";
+import axios from "axios";
 
 // Create a new Axios instance
 const axiosInstance = axios.create({
@@ -151,7 +156,7 @@ const Hoot = ({
             onClick={() => { onBookMark(_id); }}
             color="primary"
             aria-label="Bookmark post">
-              { bookmarked ? <BookMarkAddIcon /> : <BookmarkAddOutlinedIcon /> }
+              { bookmarked ? <BookmarkAddIcon /> : <BookmarkAddOutlinedIcon /> }
           </IconButton>
         </Tooltip>
 

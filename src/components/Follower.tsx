@@ -1,4 +1,7 @@
-import { Paper, Typography, Avatar, Grid } from "@mui/material"
+import Paper from "@mui/material/Paper"
+import Typography from "@mui/material/Typography"
+import Avatar from "@mui/material/Avatar"
+import Grid from "@mui/material/Grid"
 
 const Follower = ({ _id, username, createdAt } : any) => {
     return (

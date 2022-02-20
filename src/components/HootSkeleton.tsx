@@ -1,4 +1,5 @@
-import { Skeleton } from "@mui/material";
+// Import MUI library components
+import Skeleton from "@mui/material/Skeleton";
 
 const HootSkeleton = () => {
   return (
