@@ -7,7 +7,7 @@ const HootsTab = (hoots : IHoot[] | any) => {
   const currentlyLoggedUserId : any = useContext(AuthorIdContext);
 
   return (
-    <div>
+    <div style={{ width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
         { hoots.hoots !== [] && hoots.hoots.map((el : IHoot, idx : number) => {
             return <Hoot 
                 key={idx}

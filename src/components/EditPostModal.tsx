@@ -24,6 +24,8 @@ const EditPostModal = ({ onClose, onEdit } : any) => {
           </DialogTitle>    
           <DialogContent>
                 <TextField 
+                    multiline
+                    rows={2}
                     onChange={event => setNewContent(event.target.value)} 
                     sx={{ marginTop: 2 }}
                     label="New hoot content" 

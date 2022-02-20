@@ -71,15 +71,8 @@ const ProfilePage = () => {
         async function load() {
             const id = new URLSearchParams(window.location.search).get("id");
             setId(id);
-            const response = await axiosInstance.get("/api/users/profile?id=" + id);
-            
-            if(response.data.success) {
-                setHoots(response.data.data.hoots.docs);
-                setUser(response.data.data.user);
-                setFollowed(response.data.data.followed);
-                setBlocked(response.data.data.blocked);
-                setPageCount(response.data.data.hoots.totalPages);
-            }
+
+            fetchHoots()
         }
 
         load();
@@ -89,7 +82,6 @@ const ProfilePage = () => {
     useEffect(() => {
         switch (tabValue) {
             case 0:
-                
                 break;
 
             case 1:
@@ -105,6 +97,20 @@ const ProfilePage = () => {
     // Runs when user clicks on tab
     const changeTab = (event : React.SyntheticEvent<unknown>, value : number) => {
         setTabValue(value);
+    }
+
+    // Runs when user clicks the hoot tab
+    // This function is fetching all following if not fetched already
+    const fetchHoots = async () => {
+        const response = await axiosInstance.get("/api/users/profile?id=" + id);
+            
+        if(response.data.success) {
+            setHoots(response.data.data.hoots.docs);
+            setUser(response.data.data.user);
+            setFollowed(response.data.data.followed);
+            setBlocked(response.data.data.blocked);
+            setPageCount(response.data.data.hoots.totalPages);
+        }
     }
 
     // Runs when user clicks the following tab
@@ -184,12 +190,14 @@ const ProfilePage = () => {
                     <Tab onClick={fetchFollowing} disableRipple disableFocusRipple label="Following"/>
                 </Tabs>
 
-                <div style={{ marginTop: 25, width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
+                <div style={{ marginTop: 25 }}>
                     { tabValue === 0 && <HootsTab hoots={hoots}/> }
                     { tabValue === 1 && <FollowersTab followers={followers}/> }
                     { tabValue === 2 && <FollowingTab followers={following}/> }
 
-                    <Pagination page={page} onChange={handlePageChange} count={pageCount}/>
+                    <div style={{ marginTop: 30, width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
+                        <Pagination page={page} onChange={handlePageChange} count={pageCount}/>
+                    </div>
                 </div>
 
 

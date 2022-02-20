@@ -54,6 +54,7 @@ export const AuthorIdContext = React.createContext(null);
 function App() {
   const [currentlyLoggedUserId, setCurrentlyLoggedUserId] = useState(null);
 
+  // Set currently logged user's id from cookies
   useEffect(() => {
     setCurrentlyLoggedUserId(getCookie("id"));
   }, []);
