@@ -58,7 +58,9 @@ const LoginPage = () => {
           message: response.data.errors,
         });
 
+      document.cookie = "id=" + response.data.data._id + "; path=/";
       document.cookie = "token=" + response.data.data.token + "; path=/";
+
       window.location.href = "/";
     });
   }

@@ -46,6 +46,7 @@ const ProfilePage = () => {
     const [pageCount, setPageCount] = useState<number>(1);
     const loggedUserId = useContext(AuthorIdContext);
     const [menuAnchorElement, setMenuAnchorElement] = useState<HTMLElement | null>(null);
+    const [firstLoad, setFirstLoad] = useState<boolean>(true);
 
     // Status of the anchored menu
     const menuOpened = Boolean(menuAnchorElement);
@@ -69,10 +70,10 @@ const ProfilePage = () => {
     // Runs on page component load
     useEffect(() => {
         async function load() {
-            const id = new URLSearchParams(window.location.search).get("id");
-            setId(id);
+            const idToSet = new URLSearchParams(window.location.search).get("id");
+            setId(idToSet);
 
-            fetchHoots()
+            fetchHoots(idToSet)
         }
 
         load();
@@ -82,6 +83,11 @@ const ProfilePage = () => {
     useEffect(() => {
         switch (tabValue) {
             case 0:
+                if(firstLoad === false) {
+                    fetchHoots(id);
+                }
+
+                setFirstLoad(false);
                 break;
 
             case 1:
@@ -101,8 +107,8 @@ const ProfilePage = () => {
 
     // Runs when user clicks the hoot tab
     // This function is fetching all following if not fetched already
-    const fetchHoots = async () => {
-        const response = await axiosInstance.get("/api/users/profile?id=" + id);
+    const fetchHoots = async (id : string | null) => {
+        const response = await axiosInstance.get("/api/users/profile?id=" + id + "&page=" + page);
             
         if(response.data.success) {
             setHoots(response.data.data.hoots.docs);
