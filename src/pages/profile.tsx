@@ -71,8 +71,6 @@ const ProfilePage = () => {
         async function load() {
             const id = new URLSearchParams(window.location.search).get("id");
             setId(id);
-
-            fetchHoots()
         }
 
         load();
@@ -82,6 +80,7 @@ const ProfilePage = () => {
     useEffect(() => {
         switch (tabValue) {
             case 0:
+                fetchHoots();
                 break;
 
             case 1:
@@ -102,15 +101,18 @@ const ProfilePage = () => {
     // Runs when user clicks the hoot tab
     // This function is fetching all following if not fetched already
     const fetchHoots = async () => {
-        const response = await axiosInstance.get("/api/users/profile?id=" + id);
-            
-        if(response.data.success) {
-            setHoots(response.data.data.hoots.docs);
-            setUser(response.data.data.user);
-            setFollowed(response.data.data.followed);
-            setBlocked(response.data.data.blocked);
-            setPageCount(response.data.data.hoots.totalPages);
-        }
+        const id2 = new URLSearchParams(window.location.search).get("id");
+        await setId(id2);
+
+        const response = await axiosInstance.get("/api/users/profile?id=" + id2);
+        
+        if(!response.data.success) return;
+
+        setPageCount(response.data.data.hoots.totalPages);
+        setHoots(response.data.data.hoots.docs);
+        setUser(response.data.data.user);
+        setFollowed(response.data.data.followed);
+        setBlocked(response.data.data.blocked);
     }
 
     // Runs when user clicks the following tab
