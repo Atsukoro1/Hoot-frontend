@@ -60,8 +60,10 @@ const RegisterPage = () => {
           message: response.data.errors,
         });
 
-      document.cookie = "token=" + response.data.data.token + "; path=/";
-      window.location.href = "/";
+        document.cookie = "id=" + response.data.data._id + "; path=/";
+        document.cookie = "token=" + response.data.data.token + "; path=/";
+
+        window.location.href = "/";
     });
   }
 

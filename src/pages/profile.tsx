@@ -46,6 +46,7 @@ const ProfilePage = () => {
     const [pageCount, setPageCount] = useState<number>(1);
     const loggedUserId = useContext(AuthorIdContext);
     const [menuAnchorElement, setMenuAnchorElement] = useState<HTMLElement | null>(null);
+    const [firstLoad, setFirstLoad] = useState<boolean>(true);
 
     // Status of the anchored menu
     const menuOpened = Boolean(menuAnchorElement);
@@ -69,8 +70,15 @@ const ProfilePage = () => {
     // Runs on page component load
     useEffect(() => {
         async function load() {
+<<<<<<< HEAD
             const id = new URLSearchParams(window.location.search).get("id");
             setId(id);
+=======
+            const idToSet = new URLSearchParams(window.location.search).get("id");
+            setId(idToSet);
+
+            fetchHoots(idToSet)
+>>>>>>> fb61e14d284dac6ad4eb430a821e5d566f4e8f61
         }
 
         load();
@@ -80,7 +88,15 @@ const ProfilePage = () => {
     useEffect(() => {
         switch (tabValue) {
             case 0:
+<<<<<<< HEAD
                 fetchHoots();
+=======
+                if(firstLoad === false) {
+                    fetchHoots(id);
+                }
+
+                setFirstLoad(false);
+>>>>>>> fb61e14d284dac6ad4eb430a821e5d566f4e8f61
                 break;
 
             case 1:
@@ -100,6 +116,7 @@ const ProfilePage = () => {
 
     // Runs when user clicks the hoot tab
     // This function is fetching all following if not fetched already
+<<<<<<< HEAD
     const fetchHoots = async () => {
         const id2 = new URLSearchParams(window.location.search).get("id");
         await setId(id2);
@@ -113,6 +130,18 @@ const ProfilePage = () => {
         setUser(response.data.data.user);
         setFollowed(response.data.data.followed);
         setBlocked(response.data.data.blocked);
+=======
+    const fetchHoots = async (id : string | null) => {
+        const response = await axiosInstance.get("/api/users/profile?id=" + id + "&page=" + page);
+            
+        if(response.data.success) {
+            setHoots(response.data.data.hoots.docs);
+            setUser(response.data.data.user);
+            setFollowed(response.data.data.followed);
+            setBlocked(response.data.data.blocked);
+            setPageCount(response.data.data.hoots.totalPages);
+        }
+>>>>>>> fb61e14d284dac6ad4eb430a821e5d566f4e8f61
     }
 
     // Runs when user clicks the following tab

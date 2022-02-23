@@ -55,8 +55,15 @@ function App() {
   const [currentlyLoggedUserId, setCurrentlyLoggedUserId] = useState(null);
 
   // Set currently logged user's id from cookies
+  // Also check if user is authenticated
   useEffect(() => {
-    setCurrentlyLoggedUserId(getCookie("id"));
+    const token = getCookie("token");
+
+    if(!token && !["/auth/login", "/auth/register"].includes(window.location.pathname)) {
+      window.location.href = "/auth/login";
+    } else {
+      setCurrentlyLoggedUserId(getCookie("id"));
+    }
   }, []);
 
   return (
