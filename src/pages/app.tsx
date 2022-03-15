@@ -29,17 +29,15 @@ const AppPage = () => {
   const [backdropOpened, setBackdropOpened] = useState<boolean>(false);
 
   // Fetch new page and push to hoots when "Fetch new hoots button is clicked"
-  const fetchNewPage = async() => {
-    setBackdropOpened(true);
-
+  const fetchNewPage = () => {
     setPage(page + 1);
-    await fetchPosts(page);
-
-    setBackdropOpened(false);
+    fetchPosts(page);
   };
 
   // Fetch the posts from api based on the page
   const fetchPosts = async (toSetPage: number): Promise<void> => {
+    setBackdropOpened(true);
+
     const req: IHootResponse = await axiosInstance.get("/api/user/@me/feed?page=" + toSetPage);
     if (req.data?.success && page !== 1) {
       const arrayCopy = [...hoots];
@@ -53,6 +51,8 @@ const AppPage = () => {
       setHoots(req.data?.data.docs);
       setTotalPages(req.data?.data.totalPages);
     }
+
+    setBackdropOpened(false);
   };
 
   // Fetch currently logged user from api
