@@ -70,15 +70,9 @@ const ProfilePage = () => {
     // Runs on page component load
     useEffect(() => {
         async function load() {
-<<<<<<< HEAD
             const id = new URLSearchParams(window.location.search).get("id");
             setId(id);
-=======
-            const idToSet = new URLSearchParams(window.location.search).get("id");
-            setId(idToSet);
-
-            fetchHoots(idToSet)
->>>>>>> fb61e14d284dac6ad4eb430a821e5d566f4e8f61
+            fetchHoots();
         }
 
         load();
@@ -88,15 +82,11 @@ const ProfilePage = () => {
     useEffect(() => {
         switch (tabValue) {
             case 0:
-<<<<<<< HEAD
-                fetchHoots();
-=======
-                if(firstLoad === false) {
-                    fetchHoots(id);
+                if(!firstLoad) {
+                    fetchHoots();
                 }
 
                 setFirstLoad(false);
->>>>>>> fb61e14d284dac6ad4eb430a821e5d566f4e8f61
                 break;
 
             case 1:
@@ -116,12 +106,11 @@ const ProfilePage = () => {
 
     // Runs when user clicks the hoot tab
     // This function is fetching all following if not fetched already
-<<<<<<< HEAD
     const fetchHoots = async () => {
         const id2 = new URLSearchParams(window.location.search).get("id");
         await setId(id2);
 
-        const response = await axiosInstance.get("/api/users/profile?id=" + id2);
+        const response = await axiosInstance.get("/api/users/profile?id=" + id2 + "&page=" + page);
         
         if(!response.data.success) return;
 
@@ -130,18 +119,6 @@ const ProfilePage = () => {
         setUser(response.data.data.user);
         setFollowed(response.data.data.followed);
         setBlocked(response.data.data.blocked);
-=======
-    const fetchHoots = async (id : string | null) => {
-        const response = await axiosInstance.get("/api/users/profile?id=" + id + "&page=" + page);
-            
-        if(response.data.success) {
-            setHoots(response.data.data.hoots.docs);
-            setUser(response.data.data.user);
-            setFollowed(response.data.data.followed);
-            setBlocked(response.data.data.blocked);
-            setPageCount(response.data.data.hoots.totalPages);
-        }
->>>>>>> fb61e14d284dac6ad4eb430a821e5d566f4e8f61
     }
 
     // Runs when user clicks the following tab
@@ -216,9 +193,9 @@ const ProfilePage = () => {
 
             <Box sx={{ marginBottom: 2, width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
                 <Tabs sx={{ width: "fit-content", marginLeft: "auto", marginRight: "auto" }} onChange={changeTab} scrollButtons={false} aria-label="tabs" variant="scrollable" value={tabValue}>    
-                    <Tab disableRipple disableFocusRipple label="Hoots"/>
-                    <Tab onClick={fetchFollowers} disableRipple disableFocusRipple label="Followers"/>
-                    <Tab onClick={fetchFollowing} disableRipple disableFocusRipple label="Following"/>
+                    <Tab onClick={() => { setPageCount(0); fetchHoots(); }} disableRipple disableFocusRipple label="Hoots"/>
+                    <Tab onClick={() => { setPageCount(0); fetchFollowers(); }} disableRipple disableFocusRipple label="Followers"/>
+                    <Tab onClick={() => { setPageCount(0); fetchFollowing(); }} disableRipple disableFocusRipple label="Following"/>
                 </Tabs>
 
                 <div style={{ marginTop: 25 }}>

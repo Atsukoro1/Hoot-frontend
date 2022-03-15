@@ -99,7 +99,7 @@ const Hoot = ({
 
   return (
     <div>
-      <Card sx={{ width: 330, marginBottom: 2 }}>
+      <Card sx={{ width: 330, marginTop: 3, marginBottom: 3 }}>
       <CardHeader
 
         avatar={

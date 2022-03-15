@@ -1,5 +1,7 @@
 // MUI library components
-import Pagination from "@mui/material/Pagination";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import Button from "@mui/material/Button";
 
 // Other libraries
 import React, { useState, useEffect } from "react";
@@ -24,19 +26,32 @@ const AppPage = () => {
   const [hoots, setHoots] = useState<IHoot[]>([]);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [backdropOpened, setBackdropOpened] = useState<boolean>(false);
 
-  // Change the page and fetch the posts depending on it
-  const handlePage = async (event: React.SyntheticEvent<unknown>, pageNumber: number): Promise<void> => {
-    setPage(pageNumber);
-    fetchPosts(pageNumber);
+  // Fetch new page and push to hoots when "Fetch new hoots button is clicked"
+  const fetchNewPage = async() => {
+    setBackdropOpened(true);
+
+    setPage(page + 1);
+    await fetchPosts(page);
+
+    setBackdropOpened(false);
   };
 
   // Fetch the posts from api based on the page
   const fetchPosts = async (toSetPage: number): Promise<void> => {
     const req: IHootResponse = await axiosInstance.get("/api/user/@me/feed?page=" + toSetPage);
-    if (req.data?.success) {
-      setHoots(req.data.data?.docs);
+    if (req.data?.success && page !== 1) {
+      const arrayCopy = [...hoots];
+      req.data.data.docs.map((el : IHoot) => {
+        return arrayCopy.push(el);
+      });
+
+      setHoots(arrayCopy);
       setTotalPages(req.data.data.totalPages);
+    } else {
+      setHoots(req.data?.data.docs);
+      setTotalPages(req.data?.data.totalPages);
     }
   };
 
@@ -93,8 +108,7 @@ const AppPage = () => {
 
   // Bookmark post
   const bookmark = async (id: string): Promise<void> => {
-    const req = await axiosInstance.post("/api/user/@me/bookmarks?id=" + id);
-    console.log(req);
+    await axiosInstance.post("/api/user/@me/bookmarks?id=" + id);
   };
 
   // Display new post to user when currently logged user posts something
@@ -123,7 +137,7 @@ const AppPage = () => {
     <div>
       <PostInput onPostCreate={displayNewPost}/>
       
-      <div style={{ width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
+      <div style={{ width: "fit-content", marginLeft: "auto", marginRight: "auto", marginBottom: 10 }}>
         {hoots.length === 0 && HootSkeleton}
 
         {hoots.length > 0 &&
@@ -147,12 +161,12 @@ const AppPage = () => {
             );
           })}
 
-        {hoots.length > 0 && (
-          <div style={{ width: "fit-content", margin: "auto" }}>
-            <Pagination page={page} onChange={handlePage} count={totalPages} />
-          </div>
-        )}
+          { page !== totalPages && <Button onClick={fetchNewPage} sx={{ width: "100%" }}>Load more posts</Button> }
       </div>
+
+      <Backdrop sx={{ zIndex: 3 }} onClick={() => { setBackdropOpened(false) }} open={backdropOpened}>
+        <CircularProgress/>
+      </Backdrop>
     </div>
   );
 };
