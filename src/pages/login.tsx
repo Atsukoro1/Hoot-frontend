@@ -95,7 +95,7 @@ const LoginPage = () => {
               margin={"dense"}
               variant="outlined"
             />
-            <br />
+            <br/>
             <TextField
               required
               name="password"

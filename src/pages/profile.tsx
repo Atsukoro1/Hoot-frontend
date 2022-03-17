@@ -16,9 +16,10 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import HootsTab from "../components/HootsTab";
 import FollowingTab from "../components/FollowingTab";
 import FollowersTab from "../components/FollowersTab";
+import SettingsModal from "components/SettingsModal";
 
 // Other libraries components
-import React, { useEffect, useState, useContext } from "react"
+import React, { useEffect, useState, useContext, useRef } from "react"
 import axios from "axios";
 
 // Interfaces
@@ -47,6 +48,7 @@ const ProfilePage = () => {
     const loggedUserId = useContext(AuthorIdContext);
     const [menuAnchorElement, setMenuAnchorElement] = useState<HTMLElement | null>(null);
     const [firstLoad, setFirstLoad] = useState<boolean>(true);
+    const settingsModalRef : any = useRef();
 
     // Status of the anchored menu
     const menuOpened = Boolean(menuAnchorElement);
@@ -220,9 +222,11 @@ const ProfilePage = () => {
                 }
 
                 { loggedUserId === user?._id && 
-                    <MenuItem>Settings</MenuItem>
+                    <MenuItem onClick={() => { settingsModalRef.current.open(); }}>Settings</MenuItem>
                 }
             </Menu>
+
+            <SettingsModal ref={settingsModalRef}/>
         </Paper>
     )
 }
