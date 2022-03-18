@@ -40,12 +40,4 @@ const hootsSlice = createSlice({
 
 export const { set, add, remove, editContent, editHashtags, react, unreact } = hootsSlice.caseReducers;
 
-export const hoots = configureStore({
-    reducer: hootsSlice.reducer
-});
-
-hoots.subscribe(() => {
-    console.log("Something happened! => ")
-    console.log(hoots.getState());
-    console.log("-------------------------------")
-});
+export default hootsSlice.reducer;

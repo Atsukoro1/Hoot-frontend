@@ -47,6 +47,4 @@ export const userSlice = createSlice({
 
 export const { setUser, addHoot, updateBio, updateUseragent, updateEmail, udpateUsername } = userSlice.caseReducers;
 
-export const user = configureStore({
-    reducer: userSlice.reducer
-});
+export default userSlice.reducer;

@@ -3,6 +3,10 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React, { useEffect, useContext, useState } from "react";
 
+// Redux store
+import store from "./slices/store";
+import { Provider } from "react-redux";
+
 // Pages
 import Register from "./pages/register";
 import Login from "./pages/login";
@@ -68,20 +72,22 @@ function App() {
 
   return (
     <div>
-      <AuthorIdContext.Provider value={currentlyLoggedUserId}>
-        <ThemeProvider theme={theme}>
-          <Navbar/>
-          <SelectMenu/>
-          <Router>
-              <Routes>
-                <Route path="auth/register" element={<Register />} />
-                <Route path="auth/login" element={<Login />} />
-                <Route path="/" element={<AppPage />} />
-              <Route path="/profile" element={<ProfilePage/>}/>
-            </Routes>
-          </Router>
-        </ThemeProvider>
-      </AuthorIdContext.Provider>
+      <Provider store={store}>
+        <AuthorIdContext.Provider value={currentlyLoggedUserId}>
+          <ThemeProvider theme={theme}>
+            <Navbar/>
+            <SelectMenu/>
+            <Router>
+                <Routes>
+                  <Route path="auth/register" element={<Register />} />
+                  <Route path="auth/login" element={<Login />} />
+                  <Route path="/" element={<AppPage />} />
+                <Route path="/profile" element={<ProfilePage/>}/>
+              </Routes>
+            </Router>
+          </ThemeProvider>
+        </AuthorIdContext.Provider>
+      </Provider>
     </div>
   );
 }

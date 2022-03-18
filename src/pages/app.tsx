@@ -15,6 +15,11 @@ import HootSkeleton from "../components/HootSkeleton";
 import Hoot from "../components/Hoot";
 import PostInput from "../components/PostInput";
 
+// Redux things
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, addHoot, updateBio, updateUseragent, updateEmail, udpateUsername } from "../slices/user.slice"; 
+import { set, add, editContent, remove, editHashtags, react, unreact } from "slices/hoots.slice";
+
 // Create a new axios instance
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
@@ -27,6 +32,9 @@ const AppPage = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [backdropOpened, setBackdropOpened] = useState<boolean>(false);
+
+  const userS = useSelector((state : any) => state.user);
+  const hootsS = useSelector((state : any) => state.hoots);
 
   // Fetch new page and push to hoots when "Fetch new hoots button is clicked"
   const fetchNewPage = () => {
