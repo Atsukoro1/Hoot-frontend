@@ -1,4 +1,4 @@
-import { createSlice, configureStore } from "@reduxjs/toolkit";
+import { createSlice, createAction } from "@reduxjs/toolkit";
 
 export const userSlice = createSlice({
     name: "user",
@@ -14,37 +14,42 @@ export const userSlice = createSlice({
 
     reducers: {
         // Will be typically set on load of site, set user values
-        setUser: (state, action) => {
-
+        setUser: (state, { payload }) => {
+            Object.assign(state, payload);
         },
 
         // Add Hoot to user's hoot array
-        addHoot: (state, action) => {
+        addHoot: (state, { payload }) => {
 
         },
 
         // Update user's bio
-        updateBio: (state, action) => {
+        updateBio: (state, { payload }) => {
 
         },
 
         // Update user's useragent
-        updateUseragent: (state, action) => {
+        updateUseragent: (state, { payload }) => {
 
         },
 
         // Update user's email
-        updateEmail: (state, action) => {
+        updateEmail: (state, { payload }) => {
 
         },
 
         // Update user's username
-        udpateUsername: (state, action) => {
+        udpateUsername: (state, { payload }) => {
 
         }
     }
 });
 
-export const { setUser, addHoot, updateBio, updateUseragent, updateEmail, udpateUsername } = userSlice.caseReducers;
+export const setUser = createAction<any>("user/setUser");
+export const addHoot = createAction<any>("user/addHoot");
+export const updateBio = createAction<any>("user/updateBio");
+export const updateUseragent = createAction<any>("user/updateUseragent");
+export const updateEmail = createAction<any>("user/updateEmail");
+export const updateUsername = createAction<any>("user/updateUsername");
 
 export default userSlice.reducer;
