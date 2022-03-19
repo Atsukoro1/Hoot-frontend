@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 // Interfaces
-import { IUser, IUserResponse, IHoot, IHootResponse } from "../interfaces/app.interfaces";
+import { IUserResponse, IHoot, IHootResponse } from "../interfaces/app.interfaces";
 
 // Self-made components
 import HootSkeleton from "../components/HootSkeleton";
@@ -18,7 +18,7 @@ import PostInput from "../components/PostInput";
 // Redux things
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../slices/user.slice";
-import { setHoots, remove, add, editContent, react } from "slices/hoots.slice";
+import { setHoots, remove, add, editContent, react, bookmark } from "slices/hoots.slice";
 
 // Create a new axios instance
 const axiosInstance = axios.create({
@@ -69,36 +69,6 @@ const AppPage = () => {
     document.cookie = "id=" + req.data?.data?._id;
   };
 
-  // React, or remove reaction from posts
-  // const react = async (id: string): Promise<void> => {
-  //   const method = hoots.find((el : any) => el._id === id.toString())?.hearts?.find((he : any) => he === user?._id.toString()) ? "DELETE" : "PUT";
-  //   const req = await axiosInstance({
-  //     method: method, 
-  //     url: "/api/hoots/reactions",
-  //     data: { id } 
-  //   });
-  //   if (!req.data.success) return;
-
-  //   const arrayCopy = [...hoots];
-  //   const element : any = arrayCopy.find(specHoot => specHoot._id === id.toString());
-  //   const elementIndex = arrayCopy.indexOf(element);
-
-  //   if(method === "PUT") {
-  //     element?.hearts?.push(user?._id || "");
-  //   } else {
-  //     const uIndex : number | any = element?.hearts?.indexOf(user?._id || "");
-  //     if(uIndex !== -1) element?.hearts?.splice(uIndex, 1);
-  //   };
-
-  //   arrayCopy[elementIndex] = element;
-  //   dispatch(setHoots(arrayCopy));
-  // };
-
-  // Bookmark post
-  const bookmark = async (id: string): Promise<void> => {
-    await axiosInstance.post("/api/user/@me/bookmarks?id=" + id);
-  };
-
   // Runs on the page load
   // Loads user data and user feed
   useEffect(() => {
@@ -131,7 +101,7 @@ const AppPage = () => {
                 favorite={element.hearts?.includes(user?._id ? user?._id : "")}
                 bookmarked={false}
                 onReaction={(id) => { dispatch(react({ hootId: id, userId: user._id })) }}
-                onBookMark={bookmark}
+                onBookMark={(id) => { dispatch(bookmark(id)) }}
                 onDelete={(id) => { dispatch(remove(id)) }}
                 onEdit={(id : any, content: any) => { dispatch(editContent({ id: id, content: content })) }}
               />

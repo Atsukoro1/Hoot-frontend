@@ -1,14 +1,28 @@
-import Hoot from "./Hoot"
-import { IHoot } from "../interfaces/app.interfaces"
-import { AuthorIdContext } from "../App"
-import { useContext } from "react"
+// React dependencies
+import { useEffect, useContext } from "react";
+
+// Context, interfaces and components
+import Hoot from "./Hoot";
+import { IHoot } from "../interfaces/app.interfaces";
+import { AuthorIdContext } from "../App";
+
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { setHoots, remove, add, editContent, react, bookmark } from "slices/hoots.slice";
 
 const HootsTab = (hoots : IHoot[] | any) => {
+  const hoot = useSelector((state : any) => state.hoots);
+  const dispatch = useDispatch();
+
   const currentlyLoggedUserId : any = useContext(AuthorIdContext);
+
+  useEffect(() => {
+    dispatch(setHoots(hoots.hoots));
+  }, []);
 
   return (
     <div style={{ width: "fit-content", marginLeft: "auto", marginRight: "auto" }}>
-        { hoots.hoots !== [] && hoots.hoots.map((el : IHoot, idx : number) => {
+        { hoot !== [] && hoot.map((el : IHoot, idx : number) => {
             return <Hoot 
                 key={idx}
                 _id={el._id}

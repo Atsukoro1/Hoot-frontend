@@ -65,9 +65,12 @@ const hootsSlice = createSlice({
             }
         },
 
-        // Remove reaction from specific Hoot
-        unreact: state => {
-
+        // Add specific post to user's bookmarks
+        bookmark: (state, { payload }) => {
+            (async function() {
+                const response = await axiosInstance.post("/api/user/@me/bookmarks?id=" + payload.id);
+                console.log(response);
+            }());
         }
     }
 });
@@ -78,6 +81,6 @@ export const remove = createAction<any>("hoots/remove");
 export const editContent = createAction<any>("hoots/editContent");
 export const editHashtags = createAction<any>("hoots/editHashtags");
 export const react = createAction<any>("hoots/react");
-export const unreact = createAction<any>("hoots/unreact");
+export const bookmark = createAction<any>("hoots/bookmark");
 
 export default hootsSlice.reducer;

@@ -1,11 +1,17 @@
 import { createSlice, createAction } from "@reduxjs/toolkit";
+import axios from "axios";
+
+// Create a new axios instance
+const axiosInstance = axios.create({
+    baseURL: process.env.REACT_APP_BASE_URL,
+    withCredentials: true,
+});
 
 export const userSlice = createSlice({
     name: "user",
     initialState: {
         _id: "",
         hoots: [],
-        createdAt: new Date(),
         bio: "",
         ua: "",
         email: "",
